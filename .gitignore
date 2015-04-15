@@ -1,0 +1,13 @@
+/.settings/*
+/bin-debug/*
+/bin-release/*
+/lib/*
+/bin/*
+/target/*
+/ivy-cache/*
+/html-template/*
+
+/.actionScriptProperties
+/.project
+
+*.swc

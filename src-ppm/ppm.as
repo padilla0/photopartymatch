@@ -6,7 +6,11 @@ package
 	{
 		public function ppm()
 		{
+<<<<<<< HEAD
 			trace("desarrolloR");
+=======
+			trace("tengo hambreeeeee , me voyy a casa");
+>>>>>>> repo/desarrolloP
 		}
 	}
 }

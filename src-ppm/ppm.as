@@ -17,7 +17,7 @@ package
 			screensContainer = new Sprite ();
 			addChild(screensContainer);
 			ScreensManager.instance.screensContainer = screensContainer;
-            ScreensManagerinstance.addScreen("main",MainScreen);
+            ScreensManager.instance.addScreen("main",MainScreen);
 			ScreensManager.instance.addScreen("match",MatchScreen);
 			ScreensManager.instance.addScreen("charge",ChargeScreen);
 			ScreensManager.instance.showScreen("main");

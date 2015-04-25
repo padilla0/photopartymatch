@@ -1,9 +1,10 @@
 package clases
 {
-	public class Charge
+	public class Charge 
 	{
 		public function Charge()
 		{
+			 
 		}
 	}
 }

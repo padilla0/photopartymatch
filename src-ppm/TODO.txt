@@ -1,0 +1,17 @@
+implementar seteo de directorio de imagenes(escoger la carpeta raiz donde estan las fotos)
+implementar el match de las dos imagenes de dos en dos random
+implementar cambio de ronda 
+animar entrada de las imagenes
+animar salida de las imagenes
+animacion de cambio de ronda (efectos visuales y de audio)
+implementar regrteso a la main page
+
+
+implementar seteo de video
+posicionar video de fondo , reproducirlo indefinidamente
+
+
+agregar boton para cargar sonido
+implementar seteo de audio
+implementar reproduccion de sonido de fondo despues de su carga
+implementar control de volumen , play , pause

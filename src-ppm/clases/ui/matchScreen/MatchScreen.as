@@ -13,10 +13,27 @@ package clases.ui.matchScreen
 		{
 			super();
 			main_btn.addEventListener(MouseEvent.CLICK, goMainScreen);
+			
+			main_btn.addEventListener(MouseEvent.MOUSE_OVER , girar);
+			main_btn.addEventListener(MouseEvent.MOUSE_OUT , restablecer);
+		
+			
 		}
+		
+		
+		
 		private function goMainScreen(event:MouseEvent):void
 		{
 			ScreensManager.instance.showScreen("main");
+		}
+		
+		private function girar(event:MouseEvent):void
+		{
+			main_btn.rotationY = main_btn.rotationY+5;
+		}
+		private function restablecer(event:MouseEvent):void
+		{
+			main_btn.rotationY = main_btn.rotationY-5;
 		}
 	}
 }

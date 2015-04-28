@@ -2,8 +2,10 @@ package clases.ui.matchScreen
 {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.net.FileReference;
 	
-	import clases.ui.mainScreen.MainScreen;
+	import clases.connection.DBConnection;
 	
 	import cu.edu.reduc.inf.greenled.lightScreensManager.ScreensManager;
 	
@@ -16,8 +18,21 @@ package clases.ui.matchScreen
 			
 			main_btn.addEventListener(MouseEvent.MOUSE_OVER , girar);
 			main_btn.addEventListener(MouseEvent.MOUSE_OUT , restablecer);
-		
 			
+			var db:DBConnection = new DBConnection();
+			
+			var id_list:Array = db.getIndex();
+			var name_list:Array = db.getNames();
+			
+			
+			
+			
+			var appStorage:File = File.applicationStorageDirectory;
+			
+			
+			
+			imgLeft.source= appStorage.resolvePath("img/"+name_list[0]).url;
+			imgRight.source=appStorage.resolvePath("img/"+name_list[1]).url;
 		}
 		
 		

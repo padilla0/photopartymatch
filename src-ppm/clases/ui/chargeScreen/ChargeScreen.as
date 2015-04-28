@@ -1,12 +1,19 @@
 package clases.ui.chargeScreen
 {
+	import flash.desktop.NotificationType;
+	import flash.display.NativeWindow;
+	import flash.display.NativeWindowInitOptions;
+	import flash.display.NativeWindowSystemChrome;
+	import flash.display.NativeWindowType;
 	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
 	import flash.events.FileListEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import flash.geom.Rectangle;
 	import flash.net.FileFilter;
 	import flash.net.FileReference;
-	import flash.net.FileReferenceList;
 	
 	import clases.image_btn;
 	import clases.connection.DBConnection;
@@ -28,16 +35,27 @@ package clases.ui.chargeScreen
 				ScreensManager.instance.showScreen("main");
 			});
 			
+			charge_btn.addEventListener(MouseEvent.CLICK,function():void{
+				ScreensManager.instance.showScreen("main");
+			});
+			
 			main_btn.addEventListener(MouseEvent.MOUSE_OVER , girar);
 			main_btn.addEventListener(MouseEvent.MOUSE_OUT , restablecer);
 			
 			image_btn.addEventListener(MouseEvent.CLICK, cargar);
-			
 		
+			chargeok.addEventListener(MouseEvent.CLICK, back);
 			
 			file2 =   File.documentsDirectory;
 		}
 		
+		private function back(event:MouseEvent):void
+		{
+			chargeok.visible=false;
+			charge_btn.visible=true;
+			image_btn.visible=true;
+			video_btn.visible=true;
+		}
 		private function cargar(event:MouseEvent):void
 		{
 			
@@ -45,6 +63,7 @@ package clases.ui.chargeScreen
 			{
 				file2.browseForOpenMultiple("Select Files",[new FileFilter("only jpg and png images", "*.jpg;*.png")]);
 				file2.addEventListener(FileListEvent.SELECT_MULTIPLE, filesSelected);
+				
 				
 			}
 			catch (error:Error)
@@ -68,9 +87,17 @@ package clases.ui.chargeScreen
 				imgName[i]=tmp.name;
 			}
 			db.insertIMG(imgName);
+			notification();
 		}
 		
-	
+	 private function notification():void
+	 {
+		 charge_btn.visible=false;
+		 chargeok.visible=true;
+		 image_btn.visible=false;
+		 video_btn.visible=false;
+	 }
+	 
 		private function girar(event:MouseEvent):void
 		{
 			main_btn.rotationY = main_btn.rotationY+5;

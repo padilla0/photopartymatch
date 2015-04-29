@@ -1,15 +1,11 @@
 package clases.connection
 {
-	import com.greensock.loading.ImageLoader;
-	
 	import flash.data.SQLConnection;
 	import flash.data.SQLMode;
 	import flash.data.SQLResult;
 	import flash.data.SQLStatement;
 	import flash.errors.SQLError;
 	import flash.filesystem.File;
-	
-	import clases.model.Image;
 
 	public class DBConnection
 	{
@@ -23,40 +19,48 @@ package clases.connection
 		
 		public function DBConnection()
 		{
-			/* var conn = new SQLConnection();
-			
-				var folder: File = File.applicationDirectory;
-				var dbFolder: File = folder.resolvePath("db");		
-				var dbFile: File = dbFolder.resolvePath("ppm_db.db3");*/
-			//	var selectStmt:SQLStatement = new SQLStatement();
-			//	selectStmt.sqlConnection = conn;
-			
-				//selectStmt.text = "select id_img from image"; 
-				/*try {
-					conn.open(dbFile, SQLMode.CREATE);
+			try {
+				conn.open(dbFile, SQLMode.CREATE);
 				
-					//selectStmt.execute();	
-					trace("conection ok");
-				} catch (error: SQLError) {
-					trace("Error message:", error.message);
-					trace("Details:", error.details);
-				}*/
-				//var result: SQLResult = selectStmt.getResult();
+			
+				trace("conection ok");
+				
+				if(isEmpty())
+					initBattle();
+			} catch (error: SQLError) {
+				trace("Error message:", error.message);
+				trace("Details:", error.details);
 			}
+			
+			}
+		private function isEmpty():Boolean
+		{
+			var selectStmt:SQLStatement = new SQLStatement();
+			
+			selectStmt.sqlConnection = conn;
+			selectStmt.text="select winner from battle";
+			selectStmt.execute();
+			var r:SQLResult = selectStmt.getResult();
+			
+			if (r.data != null)
+			 	return false;
+			else
+				return true;
+		}
+		private function initBattle():void
+		{
+			var insertStmt:SQLStatement = new SQLStatement();
+			
+			insertStmt.sqlConnection = conn;
+			insertStmt.text = "INSERT INTO battle(idL, idR, winner)"
+				+ "VALUES (-1,-1,-1)";
+			insertStmt.execute();
+		}
 		
 		public function insertIMG(imgName:Array):void{
 			try {
 				
-				try {
-					conn.open(dbFile, SQLMode.CREATE);
-					
-					//selectStmt.execute();	
-					trace("conection ok");
-				} catch (error: SQLError) {
-					trace("Error message:", error.message);
-					trace("Details:", error.details);
-				}
-				
+			
 				var insertStmt:SQLStatement = new SQLStatement();
 			
 				insertStmt.sqlConnection = conn;
@@ -79,13 +83,40 @@ package clases.connection
 		public function getIndex():Array
 		{
 		
-			conn.open(dbFile);
+			
 			var list:Array = new Array();
+			var lastRound:Array = new Array();
 			try {
 				var selectStmt:SQLStatement = new SQLStatement();
-				
+				var inRound:Boolean = false;
 				selectStmt.sqlConnection = conn;
+				//////
+			selectStmt.text =  "select winner from battle";
 				
+				selectStmt.execute();
+				var r:SQLResult = selectStmt.getResult();
+			
+				if (r!=null){
+					var numRow:int = r.data.length;
+					
+					for (var j:int = numRow-1; j >= 0; j--) 
+					{
+						trace("j = "+j);
+						var row0:Object = r.data[j];
+						if (row0.winner!=-1 && inRound==false)
+							break;
+						else if (row0.winner == -1 && inRound==true){
+							trace("last Round = "+lastRound);
+							return lastRound;
+						}else if (row0.winner==-1 && inRound==false)
+							inRound=true;
+						else if (row0.winner != -1 && inRound==true)
+							lastRound.push(row0.winner);
+					}
+					
+				}
+				
+				//////
 				selectStmt.text = "select id_img from image ";
 					
 				selectStmt.execute();
@@ -93,7 +124,9 @@ package clases.connection
 				var result:SQLResult = selectStmt.getResult();
 				if (result != null)
 				{
+					
 					var numRows:int = result.data.length;
+					
 					for (var i:int = 0; i < numRows; i++)
 					{
 						var row: Object = result.data[i];
@@ -105,18 +138,46 @@ package clases.connection
 						selectStmt.next();
 					}
 				}
-					trace("index de las fotos recogido");
+				
+				trace("index de las fotos recogido");
+				trace("list = "+list);
+			
+				
+				
 				
 				
 			} catch (error: SQLError) {
 				trace("Error message:", error.message);
 				trace("Details:", error.details);
 			}
-			return  list;
+			return list;
+		}
+		
+		public function insertBattle(idl:int, idr:int, w:int):void
+		{
+				try{
+					var insertStmt:SQLStatement = new SQLStatement();
+					
+					insertStmt.sqlConnection = conn;
+			
+						
+						insertStmt.text = "INSERT INTO battle(idL, idR, winner)"
+							+ "VALUES (?,?,?)";
+						insertStmt.parameters[0] = idl;
+						insertStmt.parameters[1] = idr;
+						insertStmt.parameters[2] = w;
+						insertStmt.execute();
+						trace("new battle inserted");
+					
+					
+				} catch (error: SQLError) {
+					trace("Error message:", error.message);
+					trace("Details:", error.details);
+				}
 		}
 		
 		
-		public function getNames():Array
+		public function getNames(id_list:Array):Array
 		{
 			//conn.open(dbFile);
 			var list:Array = new Array();
@@ -125,25 +186,21 @@ package clases.connection
 				
 				selectStmt.sqlConnection = conn;
 				
-				selectStmt.text = "select image_name from image ";
-				
-				selectStmt.execute();
-				
-				var result:SQLResult = selectStmt.getResult();
-				if (result != null)
+				for (var j:int = 0; j < id_list.length; j++) 
 				{
-					var numRows:int = result.data.length;
-					for (var i:int = 0; i < numRows; i++)
+					selectStmt.text = "select image_name from image  where image.id_img=?";
+					selectStmt.parameters[0] = id_list[j];
+					selectStmt.execute();
+					var result:SQLResult = selectStmt.getResult();
+					if (result != null)
 					{
-						var row: Object = result.data[i];
-						list.push(row.image_name);
-						
-					}
-					if (!result.complete)
-					{
-						selectStmt.next();
+							var row: Object = result.data[0];
+							list.push(row.image_name);
 					}
 				}
+				
+				
+		
 				trace("nombres de las fotos recogido");
 				
 				

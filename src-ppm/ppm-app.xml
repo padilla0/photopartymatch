@@ -13,13 +13,14 @@
 	<text xml:lang="fr">French App name goes here</text>
 	<text xml:lang="ja">Japanese App name goes here</text>
 	</name>
---><application xmlns="http://ns.adobe.com/air/application/3.2">
-  <id>ppm</id>
+-->
+<application xmlns="http://ns.adobe.com/air/application/3.2">
+  <id>cu.mind.ppm</id>
   <versionNumber>1.0</versionNumber>
   <filename>ppm</filename>
-  <description/>
+  <description>image match system</description>
   <name>ppm</name>
-  <copyright/>
+  <copyright>all right reserved for mind</copyright>
   <initialWindow>
     <content>ppm.swf</content>
     <systemChrome>standard</systemChrome>
@@ -28,8 +29,12 @@
     <fullScreen>false</fullScreen>
     <aspectRatio>portrait</aspectRatio>
     <renderMode>auto</renderMode>
+    <maximizable>false</maximizable>
+    <minimizable>true</minimizable>
+    <resizable>false</resizable>
   </initialWindow>
-  <icon/>
+  <icon>
+    <image128x128>img/icon.png</image128x128></icon>
   <customUpdateUI>false</customUpdateUI>
   <allowBrowserInvocation>false</allowBrowserInvocation>
-</application>
+  <supportedProfiles>desktop extendedDesktop </supportedProfiles></application>

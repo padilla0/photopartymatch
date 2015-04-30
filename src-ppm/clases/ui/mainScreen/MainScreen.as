@@ -1,5 +1,6 @@
 package clases.ui.mainScreen
 {
+	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.system.fscommand;
@@ -22,7 +23,8 @@ package clases.ui.mainScreen
 			});
 			
 			exit_btn.addEventListener(MouseEvent.CLICK,function():void{ trace("EXIT");
-				fscommand("quit");
+				NativeApplication.nativeApplication.exit();
+				
 			});
 		}
 	}

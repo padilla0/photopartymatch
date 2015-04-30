@@ -16,3 +16,4 @@
 *.db3
 *.exe
 *.air
+/src-ppm/ppm.app/*

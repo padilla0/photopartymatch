@@ -75,7 +75,7 @@ package clases.ui.chargeScreen
 			{
 				file2.browseForOpenMultiple("Select Files",[new FileFilter("only jpg and png images", "*.jpg;*.png")]);
 				file2.addEventListener(FileListEvent.SELECT_MULTIPLE, filesSelected);
-				
+			
 				
 			}
 			catch (error:Error)
@@ -102,13 +102,13 @@ package clases.ui.chargeScreen
 				
 			}
 			db.insertIMG(imgName);
-			
+			notification();
 			var comodindestino:FileReference = f.resolvePath("img/comodin.png");
 			var aplicationFolder: File = File.applicationDirectory;
 			var comodinsource: File = aplicationFolder.resolvePath("img/comodin.png");
 			comodinsource.copyTo(comodindestino,true);
 			
-			notification();
+			
 		}
 		
 	 private function notification():void

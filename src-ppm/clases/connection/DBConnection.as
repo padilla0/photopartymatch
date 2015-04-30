@@ -13,15 +13,33 @@ package clases.connection
 		private  var conn:SQLConnection = new SQLConnection();
 		private  var _lp:Array; 
 		
-		private var folder: File = File.applicationDirectory;
+		/*private var folder: File = File.applicationDirectory;
 		private var dbFolder: File = folder.resolvePath("db");		
-		private var dbFile: File = dbFolder.resolvePath("ppm_db.db3");
+		private var dbFile: File = dbFolder.resolvePath("ppm_db.db3");*/
 		
 		public function DBConnection()
 		{
+			
+			var folder: File = File.applicationStorageDirectory;
+			var dbFolder: File = folder.resolvePath("db");		
+			if (!dbFolder.exists) 
+				dbFolder.createDirectory();	
+			var dbFile: File = dbFolder.resolvePath("ppm.db3");
+			
+			var createStmt: SQLStatement = new SQLStatement();
+			createStmt.sqlConnection = conn;
+			
+			createStmt.text = "CREATE TABLE IF NOT EXISTS image(id_img INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, image_name TEXT  )";
+			
+			var createStmt2: SQLStatement = new SQLStatement();
+			createStmt2.sqlConnection = conn;
+			createStmt2.text = "CREATE TABLE IF NOT EXISTS battle(idL INTEGER NOT NULL, idR INTEGER NOT NULL, winner INTEGER NOT NULL)";
 			try {
+				 
+				 
 				conn.open(dbFile, SQLMode.CREATE);
-				
+				createStmt.execute();
+				createStmt2.execute();
 			
 				trace("conection ok");
 				
@@ -54,7 +72,15 @@ package clases.connection
 		{
 			var deleteStmt:SQLStatement = new SQLStatement();
 			deleteStmt.sqlConnection = conn;
-			deleteStmt.text="delete from image ";
+			deleteStmt.text="delete from image";
+			deleteStmt.execute();
+			resetMatch();
+		}
+		public function resetMatch():void
+		{
+			var deleteStmt:SQLStatement = new SQLStatement();
+			deleteStmt.sqlConnection = conn;
+			deleteStmt.text="delete from battle";
 			deleteStmt.execute();
 		}
 		private function isEmpty():Boolean
@@ -108,7 +134,7 @@ package clases.connection
 						insertStmt.parameters[0] = imgName[i];
 						
 						insertStmt.execute();
-						trace("new image name inserted");
+						trace("new image name inserted ( "+imgName[i]+")");
 					}
 				
 			} catch (error: SQLError) {
@@ -133,7 +159,7 @@ package clases.connection
 				selectStmt.execute();
 				var r:SQLResult = selectStmt.getResult();
 			
-				if (r!=null){
+				if (r.data!=null){
 					var numRow:int = r.data.length;
 					
 					for (var j:int = numRow-1; j >= 0; j--) 
@@ -159,7 +185,7 @@ package clases.connection
 				selectStmt.execute();
 				
 				var result:SQLResult = selectStmt.getResult();
-				if (result != null)
+				if (result.data != null)
 				{
 					
 					var numRows:int = result.data.length;

@@ -27,7 +27,7 @@ package clases.ui.chargeScreen
 		private	var id_list:Array = db.getIndex();
 		private var file2:File;
 		
-		private var imgName:Array = new Array();
+		private var imgName:Array ;
 		
 		public function ChargeScreen()
 		{
@@ -48,7 +48,7 @@ package clases.ui.chargeScreen
 			chargeok.addEventListener(MouseEvent.CLICK, back);
 			
 			file2 =   File.documentsDirectory;
-			if (id_list.length>1){
+			if (id_list.length>1 || (id_list.length==1 && id_list[0]!=-1) ){
 				reset_img.visible=true;
 			}
 		}
@@ -87,7 +87,7 @@ package clases.ui.chargeScreen
 		
 	 private function filesSelected(event:FileListEvent):void 
 		{
-		
+		imgName =  new Array();
 			for (var i:uint = 0; i < event.files.length; i++) 
 			{
 				var tmp:File = event.files[i];
@@ -97,8 +97,17 @@ package clases.ui.chargeScreen
 				tmp.copyTo(destination,true);
 				
 				imgName[i]=tmp.name;
+				
+				
+				
 			}
 			db.insertIMG(imgName);
+			
+			var comodindestino:FileReference = f.resolvePath("img/comodin.png");
+			var aplicationFolder: File = File.applicationDirectory;
+			var comodinsource: File = aplicationFolder.resolvePath("img/comodin.png");
+			comodinsource.copyTo(comodindestino,true);
+			
 			notification();
 		}
 		

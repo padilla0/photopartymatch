@@ -1,23 +1,13 @@
 package clases.ui.matchScreen
 {
-	import com.greensock.easing.SlowMo;
-	
-	import flash.display.Loader;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import flash.display3D.IndexBuffer3D;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
-	import flash.globalization.NumberParseResult;
-	import flash.net.FileReference;
-	import flash.net.NetConnection;
-	import flash.sampler.NewObjectSample;
 	
 	import clases.connection.DBConnection;
 	
 	import cu.edu.reduc.inf.greenled.lightScreensManager.ScreensManager;
-	
-	import flashx.textLayout.conversion.FormatDescriptor;
 	
 	public class MatchScreen extends Sprite
 	{
@@ -34,7 +24,7 @@ package clases.ui.matchScreen
 		public function MatchScreen()
 		{
 			super();
-			
+			reset_match.addEventListener(MouseEvent.CLICK, resetMatch);
 			main_btn.addEventListener(MouseEvent.CLICK, goMainScreen);
 			db_empty.addEventListener(MouseEvent.CLICK,function():void{
 				ScreensManager.instance.showScreen("charge");
@@ -45,6 +35,7 @@ package clases.ui.matchScreen
 			
 			imgLeft.addEventListener(MouseEvent.CLICK, winnerL);
 			imgRight.addEventListener(MouseEvent.CLICK, winnerR);
+			
 			
 			///
 			trace("id list "+id_list);
@@ -60,8 +51,10 @@ package clases.ui.matchScreen
 			{
 				imgLeft.visible=false;
 				imgRight.visible=false;
-				match_btn.visible=false;
+				//match_btn.visible=false;
+				reset_match.visible=false;
 				if (id_list[0]!=-1){
+					reset_match.visible=true;
 					winner_lb.visible=true;
 					trace(name_list[0]);
 					imgWinner.source = appStorage.resolvePath("img/"+name_list[0]).url;
@@ -69,6 +62,13 @@ package clases.ui.matchScreen
 					db_empty.visible=true;
 			}
 			
+			
+		}
+	
+		private function resetMatch(event:MouseEvent):void
+		{
+			db.resetMatch();
+			ScreensManager.instance.showScreen("match");
 		}
 		private function winnerL( event:MouseEvent):void
 		{
@@ -103,7 +103,7 @@ package clases.ui.matchScreen
 						trace("WINNER is"+name_list[0]);
 						imgLeft.visible=false;
 						imgRight.visible=false;
-						match_btn.visible=false;
+				//		match_btn.visible=false;
 						nextR.visible=false;
 						winner_lb.visible=true;
 						imgWinner.source= appStorage.resolvePath("img/"+name_list[0]).url;
@@ -126,7 +126,10 @@ package clases.ui.matchScreen
 			
 			
 			selectR = myRandom(id_list.length,true);
-			imgRight.source=appStorage.resolvePath("img/"+name_list[selectR]).url;
+			if (selectR!=selectL)
+				imgRight.source=appStorage.resolvePath("img/"+name_list[selectR]).url;
+			else
+				imgRight.source=appStorage.resolvePath("img/comodin.png").url;
 			
 			
 		}

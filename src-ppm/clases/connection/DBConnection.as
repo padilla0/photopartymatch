@@ -27,12 +27,36 @@ package clases.connection
 				
 				if(isEmpty())
 					initBattle();
+				if(isEmptyI())
+					initImage();
 			} catch (error: SQLError) {
 				trace("Error message:", error.message);
 				trace("Details:", error.details);
 			}
 			
 			}
+		
+		public function isEmptyI():Boolean
+		{
+			var selectStmt:SQLStatement = new SQLStatement();
+			
+			selectStmt.sqlConnection = conn;
+			selectStmt.text="select id_img from image";
+			selectStmt.execute();
+			var r:SQLResult = selectStmt.getResult();
+			
+			if (r.data != null)
+				return false;
+			else
+				return true;
+		}
+		public function resetImages():void
+		{
+			var deleteStmt:SQLStatement = new SQLStatement();
+			deleteStmt.sqlConnection = conn;
+			deleteStmt.text="delete from image ";
+			deleteStmt.execute();
+		}
 		private function isEmpty():Boolean
 		{
 			var selectStmt:SQLStatement = new SQLStatement();
@@ -56,10 +80,23 @@ package clases.connection
 				+ "VALUES (-1,-1,-1)";
 			insertStmt.execute();
 		}
+		private function initImage():void
+		{
+			var insertStmt:SQLStatement = new SQLStatement();
+			
+			insertStmt.sqlConnection = conn;
+			insertStmt.text = "INSERT INTO image(id_img, image_name)"
+				+ "VALUES (-1,'database_empty.png')";
+			insertStmt.execute();
+		}
 		
 		public function insertIMG(imgName:Array):void{
 			try {
 				
+				var deleteStmt:SQLStatement = new SQLStatement();
+				deleteStmt.sqlConnection = conn;
+				deleteStmt.text="delete from image where id_img=-1";
+				deleteStmt.execute();
 			
 				var insertStmt:SQLStatement = new SQLStatement();
 			
@@ -101,7 +138,7 @@ package clases.connection
 					
 					for (var j:int = numRow-1; j >= 0; j--) 
 					{
-						trace("j = "+j);
+						
 						var row0:Object = r.data[j];
 						if (row0.winner!=-1 && inRound==false)
 							break;
@@ -130,7 +167,8 @@ package clases.connection
 					for (var i:int = 0; i < numRows; i++)
 					{
 						var row: Object = result.data[i];
-						list.push(row.id_img);
+						
+							list.push(row.id_img);
 						
 					}
 					if (!result.complete)

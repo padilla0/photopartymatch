@@ -36,7 +36,9 @@ package clases.ui.matchScreen
 			super();
 			
 			main_btn.addEventListener(MouseEvent.CLICK, goMainScreen);
-			
+			db_empty.addEventListener(MouseEvent.CLICK,function():void{
+				ScreensManager.instance.showScreen("charge");
+			});
 			main_btn.addEventListener(MouseEvent.MOUSE_OVER , girar);
 			main_btn.addEventListener(MouseEvent.MOUSE_OUT , restablecer);	
 		
@@ -47,7 +49,7 @@ package clases.ui.matchScreen
 			///
 			trace("id list "+id_list);
 			trace("name list "+name_list);
-			if (id_list.length!=1){
+			if (id_list.length!=1 ){
 			selectL = myRandom(id_list.length,false);
 			imgLeft.source= appStorage.resolvePath("img/"+name_list[selectL]).url;
 			
@@ -58,12 +60,13 @@ package clases.ui.matchScreen
 			{
 				imgLeft.visible=false;
 				imgRight.visible=false;
-				winner_lb.visible=true;
-				trace(name_list[0]);
-				imgWinner.source = appStorage.resolvePath("img/"+name_list[0]).url;
-			
 				match_btn.visible=false;
-				
+				if (id_list[0]!=-1){
+					winner_lb.visible=true;
+					trace(name_list[0]);
+					imgWinner.source = appStorage.resolvePath("img/"+name_list[0]).url;
+				}else
+					db_empty.visible=true;
 			}
 			
 		}
@@ -141,7 +144,7 @@ package clases.ui.matchScreen
 			else
 				select=random % length;
 			
-			if (!b || select!=taked ||length==1)
+			if (!b ||  select!=taked ||length==1)
 				break;
 			}
 			if (!b)

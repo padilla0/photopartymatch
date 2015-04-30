@@ -23,8 +23,8 @@ package clases.ui.chargeScreen
 	public class ChargeScreen extends Sprite
 	{
 		
-		private var db:DBConnection;
-	
+		private var db:DBConnection= new DBConnection();
+		private	var id_list:Array = db.getIndex();
 		private var file2:File;
 		
 		private var imgName:Array = new Array();
@@ -34,6 +34,7 @@ package clases.ui.chargeScreen
 			main_btn.addEventListener(MouseEvent.CLICK, function():void{
 				ScreensManager.instance.showScreen("main");
 			});
+			reset_img.addEventListener(MouseEvent.CLICK, resetImages);
 			
 			charge_btn.addEventListener(MouseEvent.CLICK,function():void{
 				ScreensManager.instance.showScreen("main");
@@ -43,18 +44,29 @@ package clases.ui.chargeScreen
 			main_btn.addEventListener(MouseEvent.MOUSE_OUT , restablecer);
 			
 			image_btn.addEventListener(MouseEvent.CLICK, cargar);
-		
+			
 			chargeok.addEventListener(MouseEvent.CLICK, back);
 			
 			file2 =   File.documentsDirectory;
+			if (id_list.length>1){
+				reset_img.visible=true;
+			}
 		}
-		
+		private function resetImages(event:MouseEvent):void
+		{
+			db.resetImages();
+			reset_img.visible=false;
+		}
 		private function back(event:MouseEvent):void
 		{
 			chargeok.visible=false;
 			charge_btn.visible=true;
 			image_btn.visible=true;
 			video_btn.visible=true;
+			id_list = db.getIndex();
+			if (id_list.length>1){
+				reset_img.visible=true;
+			}
 		}
 		private function cargar(event:MouseEvent):void
 		{
@@ -75,7 +87,7 @@ package clases.ui.chargeScreen
 		
 	 private function filesSelected(event:FileListEvent):void 
 		{
-		 db = new DBConnection();
+		
 			for (var i:uint = 0; i < event.files.length; i++) 
 			{
 				var tmp:File = event.files[i];
@@ -96,6 +108,7 @@ package clases.ui.chargeScreen
 		 chargeok.visible=true;
 		 image_btn.visible=false;
 		 video_btn.visible=false;
+		
 	 }
 	 
 		private function girar(event:MouseEvent):void

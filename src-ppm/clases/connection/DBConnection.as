@@ -75,6 +75,7 @@ package clases.connection
 			deleteStmt.text="delete from image";
 			deleteStmt.execute();
 			resetMatch();
+			initImage();
 		}
 		public function resetMatch():void
 		{
@@ -116,6 +117,31 @@ package clases.connection
 			insertStmt.execute();
 		}
 		
+		private function imgExist(name:String):Boolean
+		{
+		
+			var selectStmt:SQLStatement = new SQLStatement();
+			selectStmt.sqlConnection = conn;
+			selectStmt.text="select image_name from image";
+			selectStmt.execute();
+			
+			var result:SQLResult = selectStmt.getResult();
+			
+			if (result.data != null)
+			{
+				for (var i:int = 0; i < result.data.length; i++) 
+				{
+					if (name == result.data[i].image_name){
+					trace("ya existe la imegen");
+				return true;
+					}
+				
+				}
+			
+			}
+			return false;
+		}
+		
 		public function insertIMG(imgName:Array):void{
 			try {
 				
@@ -123,12 +149,13 @@ package clases.connection
 				deleteStmt.sqlConnection = conn;
 				deleteStmt.text="delete from image where id_img=-1";
 				deleteStmt.execute();
-			
+				
 				var insertStmt:SQLStatement = new SQLStatement();
 			
+				
 				insertStmt.sqlConnection = conn;
 				for(var i:int=0;i<imgName.length;i++){
-					
+					if (!imgExist(imgName[i])){
 						insertStmt.text = "INSERT INTO image(image_name)"
 							+ "VALUES (?)";
 						insertStmt.parameters[0] = imgName[i];
@@ -136,6 +163,7 @@ package clases.connection
 						insertStmt.execute();
 						trace("new image name inserted ( "+imgName[i]+")");
 					}
+				}
 				
 			} catch (error: SQLError) {
 				trace("Error message:", error.message);
@@ -262,8 +290,6 @@ package clases.connection
 							list.push(row.image_name);
 					}
 				}
-				
-				
 		
 				trace("nombres de las fotos recogido");
 				
